@@ -11,7 +11,7 @@ public final class RealTimelOnAllExecute<R> implements Function<String, R> {
         Map<String, RealTimelOnExecute.SubState> stopMap = RealTimelOnExecute.getInstance().getStopMap();
         stopMap.keySet().forEach(key -> {
             RealTimelOnExecute.SubState subState = stopMap.get(key);
-            if(subState.stop != false && !subState.current.isAlive()) {
+            if(subState.stop != false && (subState.current == null || !subState.current.isAlive())) {
                 subState.stop = false;
                 OptionEnum.REAL_TIME_SUB_ON.exec(key);
             }
