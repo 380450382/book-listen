@@ -2,6 +2,7 @@ package com.book.command.execute;
 
 import com.book.command.common.Common;
 import com.book.command.enums.OptionEnum;
+import com.book.command.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -12,10 +13,16 @@ public final class RealTimelOnExecute<R> implements Function<String,R> {
     class SubState{
         boolean stop;
         Thread current;
+        String lastArticle;
 
         public SubState(boolean stop, Thread current) {
             this.stop = stop;
             this.current = current;
+        }
+
+        public SubState(boolean stop, Thread current,String lastArticle) {
+            this(stop,current);
+            this.lastArticle = lastArticle;
         }
     }
     private Map<String,SubState> stopMap = new ConcurrentHashMap<>();
@@ -43,7 +50,7 @@ public final class RealTimelOnExecute<R> implements Function<String,R> {
         }
         threadPool.execute(() -> {
             Thread th = Thread.currentThread();
-            SubState subState = stopMap.computeIfAbsent(url, s -> new SubState(false, th));
+            SubState subState = stopMap.computeIfAbsent(url, s -> new SubState(false, th, CacheUtil.getBook(url)));
             subState.current = th;
             subState.stop = false;
             while(!subState.stop) {
@@ -51,7 +58,11 @@ public final class RealTimelOnExecute<R> implements Function<String,R> {
                     stopMap.get(url).stop = true;
                     th.interrupt();
                 }
+                String lastArticle = CacheUtil.getBook(url);
                 OptionEnum.SUB_URL.exec(url);
+                if(StringUtils.isBlank(lastArticle) || !lastArticle.equals(CacheUtil.getBook(url))){
+                    CacheUtil.storeCache();
+                }
                 synchronized (this){
                     try {
                         this.wait(5L*60*1000);

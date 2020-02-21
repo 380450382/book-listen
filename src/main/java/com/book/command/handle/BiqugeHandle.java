@@ -1,5 +1,6 @@
 package com.book.command.handle;
 
+import com.book.command.util.CacheUtil;
 import com.book.command.util.MailUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -9,11 +10,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BiqugeHandle implements Handle{
-    private Map<String,String> bookCache = new HashMap<>();
     @Override
     public boolean support(String url) {
         return StringUtils.isNotBlank(url) && url.contains("www.biquge.lu");
@@ -21,7 +19,7 @@ public class BiqugeHandle implements Handle{
 
     @Override
     public void handle(String url) throws IOException {
-        String bookLast = bookCache.get(url);
+        String bookLast = CacheUtil.getBook(url);
         URL URL = new URL(url);
         String host = URL.getHost();
         String protocol = URL.getProtocol();
@@ -32,7 +30,7 @@ public class BiqugeHandle implements Handle{
         String lastUrl = lastElement.get(0).attr("href");
         if(StringUtils.isBlank(bookLast) || !bookLast.equals(last)){
             System.out.println("已更新，发送中...");
-            bookCache.put(url,last);
+            CacheUtil.putBook(url,last);
             Document lastDocument = Jsoup.connect(protocol + "://" + host + lastUrl).get();
             Element contentElement = lastDocument.getElementsByClass("content").get(0);
             String title = contentElement.getElementsByTag("h1").html();

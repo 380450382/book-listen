@@ -1,6 +1,7 @@
 package com.book.command;
 
 import com.book.command.enums.OptionEnum;
+import com.book.command.util.CacheUtil;
 import org.apache.commons.cli.*;
 
 import java.util.Scanner;
@@ -11,6 +12,7 @@ public class Main {
     private static final Options options = init();
 
     public static void main(String[] args) {
+        CacheUtil.init();
         formatter.printHelp("book_listen", options, true);
         String[] ags = null;
         Scanner sc = new Scanner(System.in);

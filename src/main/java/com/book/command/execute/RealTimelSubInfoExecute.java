@@ -10,7 +10,7 @@ public final class RealTimelSubInfoExecute<R> implements Function<String,R> {
         System.out.println("订阅信息:");
         stopMap.keySet().forEach(key -> {
             RealTimelOnExecute.SubState subState = stopMap.get(key);
-            System.out.printf("书集url: %s \t状态: %s \t线程状态: %s\r\n",key,!subState.stop,subState.current.isAlive());
+            System.out.printf("书集url: %s \t状态: %s \t线程状态: %s \t当前最新章节：%s\r\n",key,!subState.stop,subState.current.isAlive(),subState.lastArticle);
         });
         return null;
     }

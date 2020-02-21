@@ -3,20 +3,10 @@ package com.book.command.util;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class MailUtil {
-    private static Properties properties = new Properties();
-    static {
-        try {
-            InputStream resourceAsStream = MailUtil.class.getResourceAsStream("/mail/mail.properties");
-            properties.load(resourceAsStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Properties properties = PropertiesUtil.load("/mail/mail.properties");
     public static void send(String title,String content) {
         try {
             String from = properties.getProperty("mail.username");
