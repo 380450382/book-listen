@@ -1,6 +1,8 @@
 package com.book.command.util;
 
 import com.alibaba.fastjson.JSON;
+import com.book.command.execute.RealTimelOnExecute;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.geom.IllegalPathStateException;
@@ -34,6 +36,10 @@ public final class CacheUtil {
         if(StringUtils.isNotBlank(cache)){
             cacheList = JSON.parseObject(cache.toString(),Map.class);
             bookCache = Collections.synchronizedMap(cacheList.get("book"));
+            if(bookCache != null){
+                Map<String, RealTimelOnExecute.SubState> stopMap = RealTimelOnExecute.getInstance().getStopMap();
+                bookCache.forEach((k,v) -> stopMap.put(k,new RealTimelOnExecute.SubState(v)));
+            }
         }
     }
     public static File getCacheFile(){

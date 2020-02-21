@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 
 public final class RealTimelOnExecute<R> implements Function<String,R> {
-    class SubState{
+    public static class SubState{
         boolean stop;
         Thread current;
         String lastArticle;
@@ -22,6 +22,11 @@ public final class RealTimelOnExecute<R> implements Function<String,R> {
 
         public SubState(boolean stop, Thread current,String lastArticle) {
             this(stop,current);
+            this.lastArticle = lastArticle;
+        }
+
+        public SubState(String lastArticle) {
+            this(true,null);
             this.lastArticle = lastArticle;
         }
     }
