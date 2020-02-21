@@ -6,7 +6,10 @@ import java.util.function.Function;
 public final class RealTimelOffExecute<R> implements Function<String,R> {
     @Override
     public R apply(String url) {
-        ((Map<String, RealTimelOnExecute.SubState>)RealTimelOnExecute.getInstance().getStopMap()).get(url).current.interrupt();
+        Thread current = ((Map<String, RealTimelOnExecute.SubState>) RealTimelOnExecute.getInstance().getStopMap()).get(url).current;
+        if(current != null){
+            current.interrupt();
+        }
         return null;
     }
 }
