@@ -10,7 +10,7 @@ public final class PropertiesUtil {
     public static Properties load(String path) {
         Properties properties = new Properties();
         try {
-            InputStream resourceAsStream = PropertiesUtil.class.getResourceAsStream("/cache/cache.properties");
+            InputStream resourceAsStream = PropertiesUtil.class.getResourceAsStream(path);
             properties.load(resourceAsStream);
         } catch (IOException e) {
             e.printStackTrace();

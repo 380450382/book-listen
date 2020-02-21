@@ -52,15 +52,16 @@ public final class RealTimelOnExecute<R> implements Function<String,R> {
             Thread th = Thread.currentThread();
             SubState subState = stopMap.computeIfAbsent(url, s -> new SubState(false, th, CacheUtil.getBook(url)));
             subState.current = th;
+            subState.lastArticle = CacheUtil.getBook(url);
             subState.stop = false;
             while(!subState.stop) {
                 if(Thread.interrupted()){
                     stopMap.get(url).stop = true;
                     th.interrupt();
                 }
-                String lastArticle = CacheUtil.getBook(url);
                 OptionEnum.SUB_URL.exec(url);
-                if(StringUtils.isBlank(lastArticle) || !lastArticle.equals(CacheUtil.getBook(url))){
+                if(StringUtils.isBlank(subState.lastArticle) || !subState.lastArticle.equals(CacheUtil.getBook(url))){
+                    subState.lastArticle = CacheUtil.getBook(url);
                     CacheUtil.storeCache();
                 }
                 synchronized (this){
