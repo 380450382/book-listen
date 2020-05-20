@@ -61,7 +61,7 @@ public final class CacheUtil {
         throw new IllegalPathStateException("获取资源失败");
     }
     public static void storeCache(){
-        try (Writer writer = new BufferedWriter(new FileWriter(getCacheFile()));) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getCacheFile()),"UTF-8"));) {
             writer.write(JSON.toJSONString(cacheList));
             writer.flush();
         } catch (IOException e) {
