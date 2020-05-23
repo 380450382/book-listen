@@ -1,6 +1,5 @@
 package com.book.command.handle;
 
-import com.book.command.execute.SetMailToInfoExecute;
 import com.book.command.model.Book;
 import com.book.command.util.CacheUtil;
 import com.book.command.util.MailUtil;
@@ -15,22 +14,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-public class BiqugeHandle implements Handle{
+public class Biquge2Handle implements Handle{
     @Override
     public boolean support(String url) {
-        return StringUtils.isNotBlank(url) && url.contains("www.biquge.lu");
+        return StringUtils.isNotBlank(url) && url.contains("www.biquge.info");
     }
 
     @Override
     public void handle(String url,boolean sendMail) throws IOException {
         Book book = CacheUtil.getBook(url);
-        URL URL = new URL(url);
-        String host = URL.getHost();
-        String protocol = URL.getProtocol();
         Document document = Jsoup.connect(url).get();
-        String bookName = document.getElementsByClass("info").get(0).getElementsByTag("h2").get(0).html();
-        Elements lastElement = document.getElementsByClass("last").get(1).getElementsByTag("a");
-        String last = lastElement.html();
+        Element info = document.getElementById("info");
+        String bookName = info.getElementsByTag("h1").get(0).html();
+        Elements lastElement = info.getElementsByTag("a");
+        String last = lastElement.get(0).html();
         String lastUrl = lastElement.get(0).attr("href");
         if(Objects.isNull(book) || StringUtils.isBlank(book.getLastArticle()) || !book.getLastArticle().equals(last)){
             System.out.println(MessageUtil.message("<{}>已更新", bookName));
@@ -39,10 +36,9 @@ public class BiqugeHandle implements Handle{
             }
             book.setLastArticle(last);
             book.setBookName(bookName);
-            Document lastDocument = Jsoup.connect(protocol + "://" + host + lastUrl).get();
-            Element contentElement = lastDocument.getElementsByClass("content").get(0);
-            String title = contentElement.getElementsByTag("h1").html();
-            String content = contentElement.getElementById("content").html();
+            Document lastDocument = Jsoup.connect(url + lastUrl).get();
+            String title = lastDocument.getElementsByClass("bookname").get(0).getElementsByTag("h1").get(0).html();
+            String content = lastDocument.getElementById("content").html();
             if(sendMail) {
                 System.out.println(MessageUtil.message("<{}>发送中...", bookName));
                 MailUtil.send(title + "_" + bookName, content, CacheUtil.getTo());
@@ -51,8 +47,5 @@ public class BiqugeHandle implements Handle{
             CacheUtil.putBook(url,book);
             System.out.println("本地缓存已更新");
         }
-//        else {
-//            System.out.println("还未更新");
-//        }
     }
 }

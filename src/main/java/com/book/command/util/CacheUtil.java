@@ -2,7 +2,7 @@ package com.book.command.util;
 
 import com.alibaba.fastjson.JSON;
 import com.book.command.execute.RealTimelOnExecute;
-import org.apache.commons.collections4.CollectionUtils;
+import com.book.command.model.Book;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.geom.IllegalPathStateException;
@@ -11,17 +11,28 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class CacheUtil {
-    private static Map<String,Map> cacheList = new HashMap<>();
-    private static Map<String,String> bookCache = new ConcurrentHashMap<>();
+    private static Map<String, Object> cacheList = new HashMap<>();
+    private static Map<String, Book> bookCache = new ConcurrentHashMap<>();
+    private static Set<String> toCache = new HashSet<>();
     private static Properties properties = PropertiesUtil.load("/cache/cache.properties");
     static {
         cacheList.put("book",bookCache);
+        cacheList.put("tos",toCache);
     }
-    public static String putBook(String key,String value){
-        return bookCache.put(key,value);
+    public static Book putBook(String key,Book book){
+        return bookCache.put(key,book);
     }
-    public static String getBook(String key){
-        return bookCache.get(key);
+    public static Book getBook(String key){
+        return bookCache.getOrDefault(key,new Book());
+    }
+    public static boolean putTo(String to){
+        return toCache.add(to);
+    }
+    public static Set<String> getTo(){
+        return toCache;
+    }
+    public static void clearTo(){
+        toCache.clear();
     }
     public static void init(){
         StringBuilder cache = new StringBuilder();
@@ -34,13 +45,27 @@ public final class CacheUtil {
             e.printStackTrace();
         }
         if(StringUtils.isNotBlank(cache)){
+            System.out.println("加载本地缓存");
             cacheList = JSON.parseObject(cache.toString(),Map.class);
-            bookCache = Collections.synchronizedMap(cacheList.get("book"));
-            if(bookCache != null){
-                Map<String, RealTimelOnExecute.SubState> stopMap = RealTimelOnExecute.getInstance().getStopMap();
-                bookCache.forEach((k,v) -> stopMap.put(k,new RealTimelOnExecute.SubState(v)));
+            Map<String, Book> bookMap = (Map<String, Book>) cacheList.get("book");
+            if(Objects.nonNull(bookMap)){
+                System.out.println("加载book");
+                bookCache = Collections.synchronizedMap(bookMap);
+                bookCache.keySet().forEach(key -> {
+                    bookCache.put(key,JSON.parseObject(JSON.toJSONString(bookCache.get(key)),Book.class));
+                });
+                if(bookCache != null){
+                    Map<String, RealTimelOnExecute.SubState> stopMap = RealTimelOnExecute.getInstance().getStopMap();
+                    bookCache.forEach((k,book) -> stopMap.put(k,new RealTimelOnExecute.SubState(book)));
+                }
+            }
+            if(Objects.nonNull(cacheList.get("tos"))){
+                System.out.println("加载tos");
+                toCache.addAll(JSON.parseArray(JSON.toJSONString(cacheList.get("tos")), String.class));
+                cacheList.put("tos",toCache);
             }
         }
+        System.out.println("初始化完成");
     }
     public static File getCacheFile(){
         try {
@@ -61,7 +86,7 @@ public final class CacheUtil {
         throw new IllegalPathStateException("获取资源失败");
     }
     public static void storeCache(){
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getCacheFile()),"UTF-8"));) {
+        try (Writer writer = new BufferedWriter(new FileWriter(getCacheFile()));) {
             writer.write(JSON.toJSONString(cacheList));
             writer.flush();
         } catch (IOException e) {

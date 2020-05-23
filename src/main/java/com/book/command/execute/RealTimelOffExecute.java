@@ -1,15 +1,24 @@
 package com.book.command.execute;
 
-import java.util.Map;
-import java.util.function.Function;
+import com.book.command.common.Common;
+import com.book.command.enums.ResultEnum;
+import com.book.command.execute.base.AbstractExecute;
+import org.apache.commons.lang3.StringUtils;
 
-public final class RealTimelOffExecute<R> implements Function<String,R> {
+public final class RealTimelOffExecute extends AbstractExecute<String> {
     @Override
-    public R apply(String url) {
-        Thread current = ((Map<String, RealTimelOnExecute.SubState>) RealTimelOnExecute.getInstance().getStopMap()).get(url).current;
+    public Integer execute(String url) {
+        Thread current = RealTimelOnExecute.getInstance().getStopMap().get(url).current;
         if(current != null){
             current.interrupt();
         }
-        return null;
+        return ResultEnum.SUCCESS.code();
+    }
+
+    @Override
+    public void checkParam(String url) {
+        if(StringUtils.isBlank(url) || !url.matches(Common.URL_REGEXT)){
+            System.out.println("请输入正确的url");
+        }
     }
 }

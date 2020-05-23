@@ -41,7 +41,7 @@ public class Main {
         for (OptionEnum optionEnum : OptionEnum.values()) {
             if (commandLine.hasOption(optionEnum.command())) {
                 if(!optionEnum.hasArg()){
-                    optionEnum.exec(null);
+                    optionEnum.exec();
                     continue;
                 }
                 for (String s : commandLine.getOptionValues(optionEnum.command())) {
