@@ -1,5 +1,6 @@
 package com.book.command.execute;
 
+import com.book.command.common.Common;
 import com.book.command.enums.ResultEnum;
 import com.book.command.execute.base.AbstractExecute;
 import com.book.command.util.CacheUtil;
@@ -35,6 +36,9 @@ public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
         } else {
             System.out.println("还未设置邮箱");
         }
+        System.out.println("----------------------------------");
+        System.out.println("目录缓存操作状态:");
+        System.out.printf("缓存操作状态: %s\r\n", Common.threadLocal.get());
         return ResultEnum.SUCCESS.code();
     }
 }

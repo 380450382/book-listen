@@ -1,54 +1,21 @@
 package com.book.command.execute;
 
 import com.book.command.common.Common;
+import com.book.command.enums.CacheOperateEnum;
 import com.book.command.enums.ResultEnum;
 import com.book.command.execute.base.AbstractExecute;
-import com.book.command.util.CacheUtil;
-import com.book.command.util.MessageUtil;
 import org.apache.commons.lang3.StringUtils;
 
-public class SetMailToInfoExecute extends AbstractExecute<String> {
-
+public class CacheStatusExecute extends AbstractExecute<String> {
     @Override
-    public Integer execute(String mailTos) {
-        if(!StringUtils.equals(mailTos, Common.CLEAN)){
-            String[] tos = mailTos.split(",");
-            for (String to : tos) {
-                CacheUtil.putTo(to);
-            }
-        }
-        CacheUtil.storeCache();
+    public Integer execute(String status) {
+        Common.threadLocal.set(CacheOperateEnum.statusOf(status));
         return ResultEnum.SUCCESS.code();
     }
     @Override
-    public void checkParam(String mailTos) {
-        if (StringUtils.isBlank(mailTos)) {
-            throw new IllegalArgumentException("请输入mail，多个以\",\"号隔开");
+    public void checkParam(String status) {
+        if (StringUtils.isBlank(status)) {
+            throw new IllegalArgumentException("请输入缓存操作状态");
         }
-        if (StringUtils.equals(mailTos, Common.CLEAN)){
-            return ;
-        }
-        String[] mails = mailTos.split(",");
-        StringBuilder messageBuilder = new StringBuilder();
-        for (String mail : mails) {
-            if(!mail.matches(Common.MAIL_REGEXT)){
-                messageBuilder.append(mail);
-                messageBuilder.append(",");
-            }
-        }
-        if(StringUtils.isNotBlank(messageBuilder.toString())){
-            throw new IllegalArgumentException(MessageUtil.message("{}格式不正确，请输入正确的mail",
-                    messageBuilder.toString()));
-        }
-    }
-
-    @Override
-    public String preExecute(String mailTos) {
-        if () {
-            return mailTos.split(" ")[1];
-        } else {
-            CacheUtil.clearTo();
-        }
-        return mailTos;
     }
 }

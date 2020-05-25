@@ -3,6 +3,7 @@ package com.book.command;
 import com.book.command.enums.OptionEnum;
 import com.book.command.util.CacheUtil;
 import org.apache.commons.cli.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Scanner;
 
@@ -44,9 +45,8 @@ public class Main {
                     optionEnum.exec();
                     continue;
                 }
-                for (String s : commandLine.getOptionValues(optionEnum.command())) {
-                    optionEnum.exec(s);
-                }
+                String arg = StringUtils.join(commandLine.getOptionValues(optionEnum.command()), " ");
+                optionEnum.exec(arg);
             }
         }
     }
