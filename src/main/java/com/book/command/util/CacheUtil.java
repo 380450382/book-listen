@@ -36,7 +36,7 @@ public final class CacheUtil {
     }
     public static void init(){
         StringBuilder cache = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(getCacheFile()));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getCacheFile()),"UTF-8"));) {
             String line;
             while ((line = reader.readLine()) != null){
                 cache.append(line);
@@ -86,7 +86,7 @@ public final class CacheUtil {
         throw new IllegalPathStateException("获取资源失败");
     }
     public static void storeCache(){
-        try (Writer writer = new BufferedWriter(new FileWriter(getCacheFile()));) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getCacheFile()),"UTF-8"));) {
             writer.write(JSON.toJSONString(cacheList));
             writer.flush();
         } catch (IOException e) {
