@@ -1,5 +1,7 @@
 package com.book.command.util;
 
+import java.io.UnsupportedEncodingException;
+
 public final class MessageUtil {
     public static String message(String temp, Object... params){
         String message = temp;

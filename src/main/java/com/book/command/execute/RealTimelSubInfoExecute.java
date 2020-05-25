@@ -4,6 +4,7 @@ import com.book.command.common.Common;
 import com.book.command.enums.ResultEnum;
 import com.book.command.execute.base.AbstractExecute;
 import com.book.command.util.CacheUtil;
+import com.book.command.util.MessageUtil;
 import com.book.command.util.PrintUtil;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -21,8 +22,8 @@ public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
         if(CollectionUtils.isNotEmpty(urls)){
             urls.forEach(key -> {
                 RealTimelOnExecute.SubState subState = stopMap.get(key);
-                System.out.printf("书集url: %s \t状态: %s \t线程状态: %s \t书名: %s \t当前最新章节：%s\r\n",key,!subState.stop,
-                        subState.current!=null?subState.current.isAlive():false,subState.bookName ,subState.lastArticle);
+                PrintUtil.print(MessageUtil.message("书集url: {} \t状态: {} \t线程状态: {} \t书名: {} \t当前最新章节：{}",key,!subState.stop,
+                        subState.current!=null?subState.current.isAlive():false,subState.bookName ,subState.lastArticle));
             });
         } else {
             PrintUtil.print("还未订阅书籍");
@@ -32,14 +33,14 @@ public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
         Set<String> tos = CacheUtil.getTo();
         if(CollectionUtils.isNotEmpty(tos)){
             for (String to : tos) {
-                System.out.printf("邮箱: %s\r\n",to);
+                PrintUtil.print(MessageUtil.message("邮箱: {}",to));
             }
         } else {
             PrintUtil.print("还未设置邮箱");
         }
         PrintUtil.print("----------------------------------");
         PrintUtil.print("目录缓存操作状态:");
-        System.out.printf("缓存操作状态: %s\r\n", Common.threadLocal.get());
+        PrintUtil.print(MessageUtil.message("缓存操作状态: {}",Common.threadLocal.get()));
         return ResultEnum.SUCCESS.code();
     }
 }

@@ -1,5 +1,6 @@
 package com.book.command.util;
 
+import com.book.command.common.Common;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -18,12 +19,15 @@ public final class PrintUtil {
     private final static String SECOND = "ss";
     private final static String MSG = "{msg}";
     private final static Calendar calendar = Calendar.getInstance();
-    public static void print(String info) {
-        try {
-            info = new String(info.getBytes(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+    public static void print(String info,boolean isErr) {
+        if (isErr) {
+            System.err.println(getTemp(info));
+        } else {
+            System.out.println(getTemp(info));
         }
-        System.out.println(getTemp(info));
+    }
+    public static void print(String info) {
+        print(info,false);
     }
     private static String getTemp(String msg){
         if(StringUtils.isBlank(TEMP)){

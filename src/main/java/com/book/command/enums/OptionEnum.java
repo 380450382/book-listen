@@ -27,7 +27,7 @@ public enum OptionEnum {
     public void exec(String val,boolean printResult) {
         Object result = execute.apply(val);
         if(printResult) {
-            System.err.println(MessageUtil.message("返回结果: {}", result));
+            PrintUtil.print(MessageUtil.message("返回结果: {}", result),true);
         }
     }
 
@@ -43,7 +43,7 @@ public enum OptionEnum {
         try {
             Object result = execute.call();
             if(printResult) {
-                System.err.println(MessageUtil.message("返回结果: {}", result));
+                PrintUtil.print(MessageUtil.message("返回结果: {}", result),true);
             }
         } catch (Exception e) {
             PrintUtil.print(MessageUtil.message("call异常,{}",e.getMessage()));

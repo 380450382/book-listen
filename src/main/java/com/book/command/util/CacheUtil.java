@@ -1,6 +1,7 @@
 package com.book.command.util;
 
 import com.alibaba.fastjson.JSON;
+import com.book.command.common.Common;
 import com.book.command.execute.RealTimelOnExecute;
 import com.book.command.model.Book;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public final class CacheUtil {
     }
     public static void init(){
         StringBuilder cache = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getCacheFile()),"UTF-8"));) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getCacheFile()), "UTF-8"));) {
             String line;
             while ((line = reader.readLine()) != null){
                 cache.append(line);
@@ -86,7 +87,7 @@ public final class CacheUtil {
         throw new IllegalPathStateException("获取资源失败");
     }
     public static void storeCache(){
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getCacheFile()),"UTF-8"));) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getCacheFile()), "UTF-8"));) {
             writer.write(JSON.toJSONString(cacheList));
             writer.flush();
         } catch (IOException e) {
