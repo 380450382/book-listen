@@ -5,6 +5,7 @@ import com.book.command.model.Book;
 import com.book.command.util.CacheUtil;
 import com.book.command.util.MailUtil;
 import com.book.command.util.MessageUtil;
+import com.book.command.util.PrintUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,7 +34,7 @@ public class BiqugeHandle implements Handle{
         String last = lastElement.html();
         String lastUrl = lastElement.get(0).attr("href");
         if(Objects.isNull(book) || StringUtils.isBlank(book.getLastArticle()) || !book.getLastArticle().equals(last)){
-            System.out.println(MessageUtil.message("<{}>已更新", bookName));
+            PrintUtil.print(MessageUtil.message("<{}>已更新", bookName));
             if(Objects.isNull(book)){
                 book = new Book();
             }
@@ -44,15 +45,15 @@ public class BiqugeHandle implements Handle{
             String title = contentElement.getElementsByTag("h1").html();
             String content = contentElement.getElementById("content").html();
             if(sendMail) {
-                System.out.println(MessageUtil.message("<{}>发送中...", bookName));
+                PrintUtil.print(MessageUtil.message("<{}>发送中...", bookName));
                 MailUtil.send(title + "_" + bookName, content, CacheUtil.getTo());
-                System.out.println(MessageUtil.message("<{}>已发送", bookName));
+                PrintUtil.print(MessageUtil.message("<{}>已发送", bookName));
             }
             CacheUtil.putBook(url,book);
-            System.out.println("本地缓存已更新");
+            PrintUtil.print("本地缓存已更新");
         }
 //        else {
-//            System.out.println("还未更新");
+//            PrintUtil.print("还未更新");
 //        }
     }
 }

@@ -45,11 +45,11 @@ public final class CacheUtil {
             e.printStackTrace();
         }
         if(StringUtils.isNotBlank(cache)){
-            System.out.println("加载本地缓存");
+            PrintUtil.print("加载本地缓存");
             cacheList = JSON.parseObject(cache.toString(),Map.class);
             Map<String, Book> bookMap = (Map<String, Book>) cacheList.get("book");
             if(Objects.nonNull(bookMap)){
-                System.out.println("加载book");
+                PrintUtil.print("加载book");
                 bookCache = Collections.synchronizedMap(bookMap);
                 bookCache.keySet().forEach(key -> {
                     bookCache.put(key,JSON.parseObject(JSON.toJSONString(bookCache.get(key)),Book.class));
@@ -60,12 +60,12 @@ public final class CacheUtil {
                 }
             }
             if(Objects.nonNull(cacheList.get("tos"))){
-                System.out.println("加载tos");
+                PrintUtil.print("加载tos");
                 toCache.addAll(JSON.parseArray(JSON.toJSONString(cacheList.get("tos")), String.class));
                 cacheList.put("tos",toCache);
             }
         }
-        System.out.println("初始化完成");
+        PrintUtil.print("初始化完成");
     }
     public static File getCacheFile(){
         try {

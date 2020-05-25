@@ -3,6 +3,7 @@ package com.book.command.enums;
 import com.book.command.execute.*;
 import com.book.command.execute.base.BaseExecute;
 import com.book.command.util.MessageUtil;
+import com.book.command.util.PrintUtil;
 
 public enum OptionEnum {
     SUB_URL("s","subUrl",true,"订阅书集的url",false,new SubUrlExecute()),
@@ -45,7 +46,7 @@ public enum OptionEnum {
                 System.err.println(MessageUtil.message("返回结果: {}", result));
             }
         } catch (Exception e) {
-            System.out.println(MessageUtil.message("call异常,{}",e.getMessage()));
+            PrintUtil.print(MessageUtil.message("call异常,{}",e.getMessage()));
         }
     }
 

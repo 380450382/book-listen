@@ -15,7 +15,7 @@ public class MailUtil {
     public static void send(String title, String content, Set<String> tos) {
         try {
             if(CollectionUtils.isEmpty(tos)){
-                System.out.println("还未设置邮箱");
+                PrintUtil.print("还未设置邮箱");
                 return;
             }
             String from = properties.getProperty("mail.username");

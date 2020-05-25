@@ -7,6 +7,7 @@ import com.book.command.handle.Biquge2Handle;
 import com.book.command.handle.BiqugeHandle;
 import com.book.command.handle.Handle;
 import com.book.command.util.MessageUtil;
+import com.book.command.util.PrintUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class SubUrlExecute extends AbstractExecute<String> {
                 return ResultEnum.SUCCESS.code();
             }
         }
-        System.out.println("没找到相应的处理器");
+        PrintUtil.print("没找到相应的处理器");
         return ResultEnum.SUCCESS.code();
     }
 

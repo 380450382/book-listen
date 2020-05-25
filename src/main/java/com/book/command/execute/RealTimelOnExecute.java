@@ -6,6 +6,7 @@ import com.book.command.enums.ResultEnum;
 import com.book.command.execute.base.AbstractExecute;
 import com.book.command.model.Book;
 import com.book.command.util.CacheUtil;
+import com.book.command.util.PrintUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -103,7 +104,7 @@ public final class RealTimelOnExecute extends AbstractExecute<String> {
     @Override
     public void checkParam(String url) {
         if(StringUtils.isBlank(url) || !url.matches(Common.URL_REGEXT)){
-            System.out.println("请输入正确的url");
+            PrintUtil.print("请输入正确的url");
         }
     }
 
