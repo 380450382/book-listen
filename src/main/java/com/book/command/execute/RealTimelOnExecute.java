@@ -11,7 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public final class RealTimelOnExecute extends AbstractExecute<String> {
     public static class SubState{
@@ -50,9 +51,6 @@ public final class RealTimelOnExecute extends AbstractExecute<String> {
         }
     }
     private Map<String,SubState> stopMap = new ConcurrentHashMap<>();
-    private ExecutorService threadPool = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
-            1L, TimeUnit.SECONDS,
-            new SynchronousQueue<Runnable>());
     private static RealTimelOnExecute realTimelOnExecute;
     private RealTimelOnExecute() {
     }
@@ -69,7 +67,7 @@ public final class RealTimelOnExecute extends AbstractExecute<String> {
 
     @Override
     public Integer execute(String url) {
-        threadPool.execute(() -> {
+        Common.threadPool.execute(() -> {
             Thread th = Thread.currentThread();
             SubState subState = stopMap.computeIfAbsent(url, s -> new SubState(false, th, CacheUtil.getBook(url)));
             subState.current = th;
@@ -89,13 +87,7 @@ public final class RealTimelOnExecute extends AbstractExecute<String> {
                     subState.lastArticle = book.getLastArticle();
                     CacheUtil.storeCache();
                 }
-                synchronized (this){
-                    try {
-                        this.wait(5L*60*1000);
-                    } catch (InterruptedException e) {
-                        stopMap.get(url).stop = true;
-                    }
-                }
+                Common.wait(this, 5, TimeUnit.MINUTES, ()->stopMap.get(url).stop = true);
             }
         });
         return ResultEnum.SUCCESS.code();

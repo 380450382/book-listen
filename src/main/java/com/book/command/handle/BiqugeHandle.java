@@ -1,7 +1,5 @@
 package com.book.command.handle;
 
-import com.book.command.common.Common;
-import com.book.command.execute.SetMailToInfoExecute;
 import com.book.command.model.Book;
 import com.book.command.util.CacheUtil;
 import com.book.command.util.MailUtil;
@@ -47,7 +45,7 @@ public class BiqugeHandle implements Handle{
             String content = contentElement.getElementById("content").html();
             if(sendMail) {
                 PrintUtil.print(MessageUtil.message("<{}>发送中...", bookName));
-                MailUtil.send(title + "_" + bookName, content, CacheUtil.getTo());
+                MailUtil.send(title + "_" + bookName, content, CacheUtil.getTos());
                 PrintUtil.print(MessageUtil.message("<{}>已发送", bookName));
             }
             CacheUtil.putBook(url,book);

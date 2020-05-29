@@ -14,7 +14,9 @@ public enum OptionEnum {
     REAL_TIME_SUB_ON_ALL("rona","realTimeSubOnAll",false,"开启所有实时订阅书集的url",false, new RealTimelOnAllExecute()),
     REAL_TIME_SUB_INFO("si","realTimeSubInfo",false,"查看实时订阅信息",false, new RealTimelSubInfoExecute()),
     SET_MAIL_TO_INFO("smti","setMailToInfo",true,"设置接收人邮箱(xx@mm.com,xx@mm.com,clean清空)",false, new SetMailToInfoExecute()),
-    CACHE_STATUS("cs","cacheStatus",true,"接下来cache的操作(默认clean;目前mail已实现)",false, new CacheStatusExecute()),
+    CACHE_STATUS("cs","cacheStatus",true,"接下来cache的操作(默认clean;目前mail、keyword已实现)",false, new CacheStatusExecute()),
+    DAILY_RECOMMEND("dr","dailyRecommend",true,"开启/关闭每日推荐(ON/OFF)",false, new DailyRecommendExecute()),
+    SET_KEYWORD("sk","setKeyword",true,"设置每日推荐关键字(多个以,隔开)",false, new SetKeywordExecute()),
     ;
 
     private String command;

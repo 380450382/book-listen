@@ -1,7 +1,6 @@
 package com.book.command.execute;
 
 import com.book.command.common.Common;
-import com.book.command.enums.CacheOperateEnum;
 import com.book.command.enums.ResultEnum;
 import com.book.command.execute.base.AbstractExecute;
 import com.book.command.util.CacheUtil;
@@ -12,16 +11,10 @@ public class SetMailToInfoExecute extends AbstractExecute<String> {
 
     @Override
     public Integer execute(String mailTos) {
-        if(CacheOperateEnum.CLEAN == Common.threadLocal.get()){
-            CacheUtil.clearTo();
-        }
         if(StringUtils.equalsIgnoreCase(mailTos,Common.CLEAN)){
             CacheUtil.clearTo();
         } else {
-            String[] tos = mailTos.split(",");
-            for (String to : tos) {
-                CacheUtil.putTo(to);
-            }
+            CacheUtil.putTos(mailTos.split(","));
         }
         CacheUtil.storeCache();
         return ResultEnum.SUCCESS.code();

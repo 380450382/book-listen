@@ -3,7 +3,7 @@ package com.book.command.enums;
 import org.apache.commons.lang3.StringUtils;
 
 public enum  CacheOperateEnum {
-    CLEAN("clean"),
+    CLEAN("CLEAN"),
     ADD("ADD"),
     ;
     private String status;

@@ -7,9 +7,9 @@ import com.book.command.util.CacheUtil;
 import com.book.command.util.MessageUtil;
 import com.book.command.util.PrintUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
@@ -30,7 +30,7 @@ public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
         }
         PrintUtil.print("----------------------------------");
         PrintUtil.print("接收邮箱:");
-        Set<String> tos = CacheUtil.getTo();
+        Set<String> tos = CacheUtil.getTos();
         if(CollectionUtils.isNotEmpty(tos)){
             for (String to : tos) {
                 PrintUtil.print(MessageUtil.message("邮箱: {}",to));
@@ -39,8 +39,14 @@ public final class RealTimelSubInfoExecute extends AbstractExecute<String> {
             PrintUtil.print("还未设置邮箱");
         }
         PrintUtil.print("----------------------------------");
-        PrintUtil.print("目录缓存操作状态:");
+        PrintUtil.print("目前缓存操作状态:");
         PrintUtil.print(MessageUtil.message("缓存操作状态: {}",Common.threadLocal.get()));
+        PrintUtil.print("----------------------------------");
+        PrintUtil.print("每日推荐:");
+        Thread dailyThread = DailyRecommendExecute.getDailyThread();
+        boolean isAlive = dailyThread != null ? dailyThread.isAlive() : false;
+        PrintUtil.print(MessageUtil.message("每日定时是否存活:{} \t关键词: {}"
+                , isAlive, StringUtils.join(CacheUtil.getKeywords(),",")));
         return ResultEnum.SUCCESS.code();
     }
 }
