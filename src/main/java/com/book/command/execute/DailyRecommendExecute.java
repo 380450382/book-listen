@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class DailyRecommendExecute extends AbstractExecute<String> {
 
@@ -112,5 +113,12 @@ public class DailyRecommendExecute extends AbstractExecute<String> {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) {
+        List<String> list = new ArrayList();
+        list.add("mock");
+        list.stream().sorted().map(s -> s).findFirst();
+        list.stream().collect(Collectors.toList());
     }
 }

@@ -37,15 +37,17 @@ public abstract class AbstractDailyHandle<R> implements Handle<R>, java.io.Seria
     private Throwable throwable;
     @Override
     public R get() throws Throwable {
-        start:
-        if(state <= EXECUTION){
-            Thread currentThread = Thread.currentThread();
-            if(waitQueue.offer(currentThread)) {
-                LockSupport.park();
-            } else {
-                PrintUtil.print("AbstractDailyHandle:等待队列添加失败");
+        for(;;) {
+            if (state <= EXECUTION) {
+                Thread currentThread = Thread.currentThread();
+                if (waitQueue.offer(currentThread)) {
+                    LockSupport.park();
+                } else {
+                    PrintUtil.print("AbstractDailyHandle:等待队列添加失败");
+                }
+                continue;
             }
-            break start;
+            break;
         }
         if(state == SUCCESS) {
             return result;

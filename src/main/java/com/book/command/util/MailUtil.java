@@ -1,12 +1,10 @@
 package com.book.command.util;
 
-import com.book.command.execute.SetMailToInfoExecute;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
